@@ -40,7 +40,7 @@ func (v *ValidatorErrorBag) Reset() {
 	}
 }
 
-func (v *ValidatorErrorBag)  Delete(key string) {
+func (v *ValidatorErrorBag) Delete(key string) {
 	delete(v.Errors, key)
 }
 
