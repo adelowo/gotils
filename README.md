@@ -14,3 +14,7 @@ Current Packages include :
 Well, this is essentially a bag. It is used to hold values in a key value format. 
 
 There is currently just one implementation of this right now and it is a `ValidatorErrorBag`. This can be attached to a view (json response) in other to provide feedback as per the user's entry.
+
+- `Hasher`
+
+Provides a simple wrapper for `crypto/bcrypt`.
