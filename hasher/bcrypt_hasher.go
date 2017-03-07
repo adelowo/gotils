@@ -6,13 +6,14 @@ import (
 )
 
 type BcryptHasher struct {
+	Cost int
 }
 
 //Some cryptic hash value would be the first return value of the expression
 //While an error would be the second. The hash was successful only if the error equals nil
 func (b *BcryptHasher) Hash(p string) (string, error) {
 
-	hashedInBytes, err := bcrypt.GenerateFromPassword([]byte(p), bcrypt.DefaultCost)
+	hashedInBytes, err := bcrypt.GenerateFromPassword([]byte(p), b.Cost)
 
 	if err != nil {
 		return "", err
@@ -25,6 +26,6 @@ func (b *BcryptHasher) Verify(hashed, plain string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hashed), []byte(plain)) == nil
 }
 
-func NewBcryptHasher() *BcryptHasher {
-	return &BcryptHasher{}
+func NewBcryptHasher(cost int) *BcryptHasher {
+	return &BcryptHasher{cost}
 }
