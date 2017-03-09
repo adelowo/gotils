@@ -46,6 +46,6 @@ func TestBcryptHasherVerificationFailsIfCostIsTooHigh(t *testing.T) {
 
 	_, err := hasher.Hash("bad-password")
 
-	assert.Error(t,err)
+	assert.Error(t, err)
 
 }
