@@ -30,7 +30,7 @@ func TestClient_Register(t *testing.T) {
 		Name: "oops",
 	}
 
-	_, err = client.RegisterService(svc)
+	err = client.RegisterService(svc)
 	require.NoError(t, err)
 }
 
@@ -45,7 +45,7 @@ func TestClient_DeRegister(t *testing.T) {
 		Name: "oops",
 	}
 
-	id, err = client.RegisterService(svc)
+	err = client.RegisterService(svc)
 	require.NoError(t, err)
 
 	require.NoError(t, client.DeRegister(svc))

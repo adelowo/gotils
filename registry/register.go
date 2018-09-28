@@ -4,7 +4,6 @@ import (
 	"net"
 
 	consul "github.com/hashicorp/consul/api"
-	"github.com/pborman/uuid"
 )
 
 type Client struct {
@@ -35,12 +34,8 @@ func New(addr string) (*Client, error) {
 
 // RegisterService takes a service definition and adds it to consul
 // It disregards whatever ID was given and uses a uuid internal so as to prevent clashes
-func (c *Client) RegisterService(svc *consul.AgentServiceRegistration) (string, error) {
-
-	id := uuid.New()
-	svc.ID = id
-
-	return id, c.inner.Agent().ServiceRegister(svc)
+func (c *Client) RegisterService(svc *consul.AgentServiceRegistration) error {
+	return c.inner.Agent().ServiceRegister(svc)
 }
 
 // Deregister removes a client from consul's service list
