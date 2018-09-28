@@ -3,7 +3,8 @@ language: go
 before_script:
   - go vet ./...
 
+# set up consul so integration tests can run
+
 go:
-  - 1.7
-  - 1.8
+  - "1.11"
   - tip
