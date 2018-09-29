@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	CONSUL_ADDRESS = "CONSUL_ADDR"
+	CONSUL_ADDRESS = "CONSUL_HTTP_ADDR"
 )
 
 func consulAddr() string {
