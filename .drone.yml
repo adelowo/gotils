@@ -35,3 +35,5 @@ services:
       - "8500:8500"
       - "8600:8600"
     command: "agent -dev"
+
+
