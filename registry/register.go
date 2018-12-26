@@ -33,7 +33,6 @@ func New(addr string) (*Client, error) {
 }
 
 // RegisterService takes a service definition and adds it to consul
-// It disregards whatever ID was given and uses a uuid internal so as to prevent clashes
 func (c *Client) RegisterService(svc *consul.AgentServiceRegistration) error {
 	return c.inner.Agent().ServiceRegister(svc)
 }
@@ -43,7 +42,7 @@ func (c *Client) DeRegister(svc *consul.AgentServiceRegistration) error {
 	return c.inner.Agent().ServiceDeregister(svc.ID)
 }
 
-func ipAddr() (net.IP, error) {
+func (c *Client) IP() (net.IP, error) {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
 		return nil, err
