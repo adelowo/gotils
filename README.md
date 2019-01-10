@@ -7,6 +7,46 @@ Some useful set of packages (utilities) i think i'd be needing over and over whi
 
 Current Packages include :
 
+- `Registry`
+
+Allows for service registration and deregistration with consul.
+
+```go
+
+	defaultCfg := consul.DefaultConfig()
+	defaultCfg.Address = *discoveryAddr
+
+	client, err := consul.NewClient(defaultCfg)
+	if err != nil {
+		fatalPrintln(fmt.Sprintf("could not connect to consul... %v", err))
+	}
+
+	registrar := registry.NewWithClient(client)
+	if err != nil {
+		fatalPrintln(fmt.Sprintf("could not build registrar %v\n", err))
+	}
+
+	ip, err := registrar.IP()
+	if err != nil {
+		fatalPrintln(fmt.Sprintf("Could not retrieve IP address %v\n", err))
+	}
+
+	svc := &consul.AgentServiceRegistration{
+		ID:      uuid.New().String(),
+		Name:    config.ServiceName,
+		Port:    *httpPort,
+		Address: ip.String(),
+	}
+
+	if err := registrar.RegisterService(svc); err != nil {
+		fatalPrintln(fmt.Sprintf("Could not register service... %v", err))
+	}
+	
+	<-shutdownChan
+	registrar.DeRegister(svc)
+
+```
+
 - `Hasher`
 
 Provides a simple wrapper for `crypto/bcrypt`.
@@ -30,51 +70,4 @@ func main() {
   fmt.Println(h.Verify(hashed, plain))
 }
 
-```
-
-- `Bag`
-
-It is used to hold values in a key value format.
-
-There is currently just one implementation of this right now and it is a `ValidatorErrorBag`. This can be attached to a view (json response) in other to provide feedback as per the user's entry.
-
-
-```go
-
-//import github.com/adelowo/gotils/bag
-
-//Some sample handler
-func postLogin(w http.ResponseWriter, r *http.Request) {
-
-	validatorErrorBag := bag.NewValidatorErrorBag()
-
-	r.ParseForm()
-
-	email := r.Form.Get("email")
-	password := r.Form.Get("password")
-
-	if email == "" {
-			validatorErrorBag.Add("email", "Please provide a valid email address")
-	}
-
-	if password == "" {
-		validatorErrorBag.Add("password", "Please provide your password")
-	}
-
-	if validatorErrorBag.Count() != 0 {
-		sendLoginFailureResponse(w, r, validatorErrorBag)
-    //sendLoginFailureResponse can make use of the `Get` and/or `Reset` method on the bag
-		return
-	}
-
-	currentUser, err := model.FindUserByEmail(email)
-
-	if err != nil {
-		validatorErrorBag.Add("password", "Invalid password/email combination")
-		sendLoginFailureResponse(w, r, validatorErrorBag)
-		return
-	}
-	http.Redirect(w, r, "/", http.StatusFound)
-
-	}
 ```
